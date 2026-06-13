@@ -7,7 +7,6 @@
 // ============================================================
 
 using System.ComponentModel.DataAnnotations;
-namespace TMS.Models;
 
 // TODO 1: Create a class called PaymentOptions with two validated properties.
 public class PaymentOptions

@@ -21,15 +21,15 @@ curl -X POST http://localhost:5196/api/enrollments \
 ###
 
 
-curl http://localhost:5196/api/enrollments/{id}
+curl http://localhost:5196/api/enrollments/ab865c54
 
 ###
 
-curl -X DELETE http://localhost:5196/api/enrollments/{id}
+curl -X DELETE http://localhost:5196/api/enrollments/ab865c54
 
 ###
 
-curl http://localhost:5196/api/enrollments/{id}
+curl http://localhost:5196/api/enrollments/ab865c54
 
 ###
 

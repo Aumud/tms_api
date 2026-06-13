@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.OpenApi;
+//using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
-using TMS.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -13,7 +13,7 @@ builder.Services.AddOptions<PaymentOptions>()
 
 
 builder.Services.AddScoped<EnrollmentWorker>();
-builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+builder.Services.AddSingleton<IEnrollmentService, EnrollmentService>();
 
 
 builder.Services.AddControllers();
