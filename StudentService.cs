@@ -1,4 +1,5 @@
 // --- The contract ---
+using TmsApi.Entities;
 public interface IStudentService
 {
     Task<Student> CreateAsync(string id, string name, int age, decimal gpa);
@@ -26,7 +27,13 @@ public class StudentService : IStudentService
             throw new InvalidOperationException($"Student with id {id} already exists");
         }
 
-        var student = new Student(id, name, age, gpa);
+        var student = new Student
+            {
+                RegistrationNumber = id, // 'id' is actually the registration number
+                Name = name,
+                Age = age,
+                GPA = gpa
+            };
         _store[id] = student;
 
         _logger.LogInformation("Created student {Id} {Name}", id, name);
@@ -65,11 +72,11 @@ public class StudentService : IStudentService
 }
 
 // --- The data shape ---
-public record Student(
-    string Id,
-    string Name,
-    int Age,
-    decimal GPA);
+// public record Student(
+//     string Id,
+//     string Name,
+//     int Age,
+//     decimal GPA);
 
 public record CreateStudentRequest(
     string Id,
