@@ -81,3 +81,26 @@ curl -X DELETE http://localhost:5196/api/courses/{courseCode}
 
 curl http://localhost:5196/api/courses/{courseCode}
 ###
+
+curl http://localhost:5196/api/test/deferred
+
+###
+
+curl http://localhost:5196/api/test/translation-fail
+
+###
+
+curl -X DELETE http://localhost:5196/api/reports/students/1
+
+###
+curl http://localhost:5196/api/reports/students
+
+###
+
+curl http://localhost:5196/api/reports/students/all
+
+###
+
+curl -X POST http://localhost:5196/api/reports/archive-old-enrollments
+
+###

@@ -1,3 +1,4 @@
+using TmsApi.Entities;
 // --- The contract ---
 public interface ICourseService
 {
@@ -26,7 +27,12 @@ public class CourseService : ICourseService
             throw new InvalidOperationException($"Course with code {code} already exists");
         }
 
-        var course = new Course(code, title, capacity);
+        var course = new Course
+            {
+                Code = code,
+                Title = title,
+                Capacity = capacity
+            };
         _store[code] = course;
 
         _logger.LogInformation("Created course {Code} {Title}", code, title);
@@ -65,10 +71,10 @@ public class CourseService : ICourseService
 }
 
 // --- The data shape ---
-public record Course(
-    string Code,
-    string Title,
-    int Capacity);
+// public record Course(
+//     string Code,
+//     string Title,
+//     int Capacity);
 
 public record CreateCourseRequest(
     string Code,
