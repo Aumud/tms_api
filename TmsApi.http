@@ -108,6 +108,12 @@ curl -X POST http://localhost:5196/api/reports/archive-old-enrollments
 curl http://localhost:5196/api/courses/2
 
 ###
-curl http://localhost:5196/api/courses
+curl -k -X http://localhost:5196/api/courses \
+-H "Content-Type: application/json" \
+-d '{
+    "code": "CSE-102",
+    "title": "Data Structures",
+    "maxCapacity": 30
+}'
 
 ###
