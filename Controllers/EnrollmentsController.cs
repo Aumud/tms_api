@@ -1,45 +1,49 @@
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
+using TmsApi.Dtos;
+using TmsApi.Services;
+namespace Tms.Api.Controllers;
 [ApiController]
-[Route("api/enrollments")]
-public class EnrollmentsController(IEnrollmentService enrollmentService) : ControllerBase
+[Route("api/courses/{courseId:int}/enrollments")]
+public class EnrollmentsController(
+ICourseService courseService,
+IEnrollmentService enrollmentService) : ControllerBase
 {
-// GET/api/enrollments returns all enrollment records
-[HttpGet]
-public async Task<IActionResult> GetAll()
+[HttpGet("{id:int}", Name = nameof(GetEnrollment))]
+public async Task<IActionResult> GetEnrollment(int courseId, int id,
+CancellationToken ct)
 {
-var enrollments = await enrollmentService.GetAllAsync();
-return Ok(enrollments);
+var enrollment = await enrollmentService.GetByIdAsync(courseId,
+id, ct);
+return enrollment is not null ? Ok(enrollment) : NotFound();
 }
 [HttpPost]
-public async Task<IActionResult> Create([FromBody] CreateEnrollmentRequest request)
+public async Task<IActionResult> EnrollStudent(int courseId, EnrollStudentRequest request, CancellationToken ct)
 {
-var record = await enrollmentService.EnrollAsync(request.StudentId, request.CourseCode);
-return CreatedAtAction(nameof(GetById), new { id = record.Id }, record);
+// TODO 3: Look up the parent course (courseService.GetByIdAsync). If null, return NotFound().
+    var course = await courseService.GetByIdAsync(courseId, ct);
+    if(course is null)
+        {
+            return NotFound();
+        }
+// Then check capacity (course.EnrollmentCount >= course.MaxCapacity).
+// If full, return Conflict(new ProblemDetails { ... })with:
+// Title = "Course is full"
+// Detail = $"Course '{course.Title}' has reached itsmaximum capacity of {course.MaxCapacity}."
+// Status = StatusCodes.Status409Conflict
+    if(course.EnrollmentCount >= course.MaxCapacity)
+        {
+            return Conflict(new ProblemDetails
+            {
+                Title = "Code is full",
+                Detail = $"Course '{course.Title}' has reached its maximumcapacity of {course.MaxCapacity}.",
+                Status = StatusCodes.Status409Conflict
+            });
+        }
+// Otherwise, call enrollmentService.CreateAsync and return CreatedAtAction(nameof(GetEnrollment),
+// new { courseId, id = enrollment.Id }, enrollment).
+    var enrollment = await enrollmentService.CreateAsync(courseId, request, ct);
+    return CreatedAtAction(nameof(GetEnrollment), new{courseId, id = enrollment.Id}, enrollment);
+throw new NotImplementedException();
 }
-// GET/api/enrollments/{id} returns one or 404
-[HttpGet("{id}")]
-public async Task<IActionResult> GetById(string id)
-{
-var record = await enrollmentService.GetByIdAsync(id);
-return record is not null ? Ok(record) : NotFound();
 }
-
-[HttpDelete("{id}")]
-public async Task<IActionResult> Delete(string id)
-{
-var deleted = await enrollmentService.DeleteAsync(id);
-return deleted ? NoContent() : NotFound();
-}
-[Route("api/[controller]")]
-public class ErrorController : ControllerBase
-{
-    [HttpGet]
-    public IActionResult Get()
-    {
-        throw new Exception("Intentional test error");
-    }
-}
-}
-
-
-public record CreateEnrollmentRequest(string StudentId, string CourseCode);

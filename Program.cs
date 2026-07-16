@@ -3,12 +3,13 @@ using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using TmsApi.Data;
 using TmsApi.Entities;
+using TmsApi.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+builder.Services.AddOpenApi();
 builder.Services.AddOptions<PaymentOptions>()
     .BindConfiguration("Payments")
     .ValidateDataAnnotations()
@@ -16,8 +17,8 @@ builder.Services.AddOptions<PaymentOptions>()
 
 
 builder.Services.AddScoped<EnrollmentWorker>();
-builder.Services.AddSingleton<IEnrollmentService, EnrollmentService>();
-builder.Services.AddSingleton<ICourseService, CourseService>();
+builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddSingleton<IStudentService, StudentService>();
 builder.Services.AddDbContext<TmsDbContext>(options =>options.UseNpgsql(builder.Configuration.GetConnectionString("TmsDatabase"))
 .LogTo(Console.WriteLine, LogLevel.Information) // Log SQL to output window
@@ -51,10 +52,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-app.MapGet("/api/error", () =>
-{
-throw new TmsDatabaseException("Simulated database failure for ProblemDetails testing");
-});
+// app.MapGet("/api/error", () =>
+// {
+// throw new TmsDatabaseException("Simulated database failure for ProblemDetails testing");
+// });
 
 if (app.Environment.IsDevelopment())
 {
@@ -92,9 +93,9 @@ new() { RegistrationNumber = "TMS-2026-0005", Name = "Evan Wright", GPA = 2.5m, 
 context.Students.AddRange(students);
 var courses = new List<Course>
 {
-new() { Code = "CS-101", Title = "Introduction to ComputerScience", Capacity = 30 },
-new() { Code = "CS-201", Title = "Data Structures and Algorithms", Capacity = 25 },
-new() { Code = "MAT-101", Title = "Calculus I", Capacity =40 }
+new() { Code = "CS-101", Title = "Introduction to ComputerScience", MaxCapacity = 30 },
+new() { Code = "CS-201", Title = "Data Structures and Algorithms", MaxCapacity = 25 },
+new() { Code = "MAT-101", Title = "Calculus I", MaxCapacity =40 }
 };
 context.Courses.AddRange(courses);
 context.SaveChanges();

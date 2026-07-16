@@ -1,51 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
-
+using TmsApi.Dtos;
+using TmsApi.Services;
+namespace Tms.Api.Controllers;
 [ApiController]
 [Route("api/courses")]
-public class CoursesController(ICourseService courseService)
-    : ControllerBase
+public class CoursesController(ICourseService courseService) : ControllerBase
 {
-// GET api/courses
-[HttpGet]
-public async Task<IActionResult> GetAll()
-    {
-        var courses = await courseService.GetAllAsync();
-
-        return Ok(courses);
-        
-    }
-// GET api/courses/CS101
-[HttpGet("{code}")]
-public async Task<IActionResult> GetByCode(string code)
-    {
-        var course = await courseService.GetByCodeAsync(code);
-
-            return course is not null
-            ? Ok(course)
-            : NotFound();
-    }
-
-// POST api/courses
+[HttpGet("{id:int}", Name = nameof(GetCourseById))]
+public async Task<IActionResult> GetCourseById(int id, CancellationToken ct)
+{
+var course = await courseService.GetByIdAsync(id, ct);
+return course is not null ? Ok(course) : NotFound();
+}
 [HttpPost]
-public async Task<IActionResult> Create([FromBody] CreateCourseRequest request)
-    {
-        var course = await courseService.CreateAsync(
-            request.Code,
-            request.Title,
-            request.Capacity);
-
-            return CreatedAtAction(
-                nameof(GetByCode),
-                new { code = course.Code },
-                       course);
-    }
-// DELETE api/courses/CS101
-[HttpDelete("{code}")]
-public async Task<IActionResult> Delete(string code)
-    {
-        var deleted = await courseService.DeleteAsync(code);
-            return deleted
-                ? NoContent()
-                : NotFound();
-    }
+public async Task<IActionResult> CreateCourse(CreateCourseRequest request, CancellationToken ct)
+{
+    if(await courseService.CodeExistsAsync(request.Code, ct))
+        {
+                    return Conflict(new ProblemDetails
+            {
+                Title = "Course code already exists",
+                Detail = $"A course with code'{request.Code}' is already registered.",
+                Status = StatusCodes.Status409Conflict
+            });
+        }
+    
+var result = await courseService.CreateAsync(request, ct);
+return CreatedAtAction(nameof(GetCourseById), new { id = result.Id }, result);
+}
 }

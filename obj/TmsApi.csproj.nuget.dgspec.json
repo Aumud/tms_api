@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\CSUG\\tms-api\\TmsApi.csproj": {}
+    "C:\\Users\\CSUG\\tms_api\\TmsApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\CSUG\\tms-api\\TmsApi.csproj": {
+    "C:\\Users\\CSUG\\tms_api\\TmsApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\CSUG\\tms-api\\TmsApi.csproj",
+        "projectUniqueName": "C:\\Users\\CSUG\\tms_api\\TmsApi.csproj",
         "projectName": "TmsApi",
-        "projectPath": "C:\\Users\\CSUG\\tms-api\\TmsApi.csproj",
+        "projectPath": "C:\\Users\\CSUG\\tms_api\\TmsApi.csproj",
         "packagesPath": "C:\\Users\\CSUG\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\CSUG\\tms-api\\obj\\",
+        "outputPath": "C:\\Users\\CSUG\\tms_api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\CSUG\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -90,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

@@ -104,3 +104,10 @@ curl http://localhost:5196/api/reports/students/all
 curl -X POST http://localhost:5196/api/reports/archive-old-enrollments
 
 ###
+
+curl http://localhost:5196/api/courses/2
+
+###
+curl http://localhost:5196/api/courses
+
+###
