@@ -48,7 +48,7 @@ public async Task<CourseResponseDto?> GetByIdAsync(int id, CancellationToken ct)
 // and apply Descending if request.Descending. Reject unknown OrderBy values
 // silently by falling back to "Title" never let an arbitrary string
 // into the LINQ tree.
-    IOrderedQueryable<Course> sortedQuery = request.OrderBy?.ToLower() switch
+    IOrderedQueryable<Course> sortedQuery = request.OrderBy.ToLower() switch
     {
       "code" => request.Descending
       ?query.OrderByDescending(c => c.Code)
@@ -82,7 +82,7 @@ public async Task<CourseResponseDto?> GetByIdAsync(int id, CancellationToken ct)
         Page = request.Page, 
         PageSize = request.PageSize 
         };
-throw new NotImplementedException();
+// throw new NotImplementedException();
 }
 
     
