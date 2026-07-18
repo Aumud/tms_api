@@ -117,3 +117,12 @@ curl -k -X http://localhost:5196/api/courses \
 }'
 
 ###
+
+curl http://localhost:5196/api/courses?pageSize=100 | jq '.totalCount'
+
+###
+
+GET {{TmsApi_HostAddress}}/api/courses/1
+Accept: application/json
+
+###

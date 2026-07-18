@@ -15,7 +15,17 @@ public class EnrollmentService(TmsDbContext context, ILogger<EnrollmentService> 
             .Select(e => new EnrollmentResponseDto(e.Id, e.CourseId, e.
             StudentId, e.EnrolledAt))
             .FirstOrDefaultAsync(ct);
-    public async Task<EnrollmentResponseDto> CreateAsync(int courseId,
+
+        public async Task<IReadOnlyList<EnrollmentResponseDto>> GetByCourseAsync(int courseId, CancellationToken ct)
+        {
+            return await context.Enrollments
+                .AsNoTracking()
+                .Where(e => e.CourseId == courseId)
+                .Select(e => new EnrollmentResponseDto(e.Id, e.CourseId, e.StudentId, e.EnrolledAt))
+                .ToListAsync(ct);
+        }
+
+        public async Task<EnrollmentResponseDto> CreateAsync(int courseId,
     EnrollStudentRequest request, CancellationToken ct)
     {
         var enrollment = new Enrollment
@@ -32,6 +42,6 @@ public class EnrollmentService(TmsDbContext context, ILogger<EnrollmentService> 
     // TODO 2: Insert a new Enrollment with CourseId = courseId, StudentId = request.StudentId,
     // and EnrolledAt = DateTime.UtcNow. SaveChangesAsync(ct), log info, then re-read
     // through GetByIdAsync(courseId, enrollment.Id, ct).
-    throw new NotImplementedException();
+    
     }
 }
