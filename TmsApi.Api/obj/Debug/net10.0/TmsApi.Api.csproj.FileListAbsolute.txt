@@ -129,3 +129,7 @@ c:\Users\CSUG\tms_api\TmsApi.Api\obj\Debug\net10.0\ref\TmsApi.Api.dll
 C:\Users\CSUG\tms_api\TmsApi.Api\bin\Debug\net10.0\appsettings.Development.json
 C:\Users\CSUG\tms_api\TmsApi.Api\bin\Debug\net10.0\appsettings.json
 c:\Users\CSUG\tms_api\TmsApi.Api\bin\Debug\net10.0\FluentValidation.dll
+C:\Users\CSUG\tms_api\TmsApi.Api\bin\Debug\net10.0\Asp.Versioning.Abstractions.dll
+C:\Users\CSUG\tms_api\TmsApi.Api\bin\Debug\net10.0\Asp.Versioning.Http.dll
+C:\Users\CSUG\tms_api\TmsApi.Api\bin\Debug\net10.0\Asp.Versioning.Mvc.dll
+C:\Users\CSUG\tms_api\TmsApi.Api\bin\Debug\net10.0\Asp.Versioning.Mvc.ApiExplorer.dll

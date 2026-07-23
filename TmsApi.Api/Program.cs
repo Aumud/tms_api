@@ -6,22 +6,23 @@ using TmsApi.Infrastructure.Persistence;
 using TmsApi.Infrastructure.Services;
 using TmsApi.Domain.Entities;
 using TmsApi.Filters;
+using Asp.Versioning;
 
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
-// builder.Services.AddOptions<PaymentOptions>()
-//     .BindConfiguration("Payments")
-//     .ValidateDataAnnotations()
-//     .ValidateOnStart();
+builder.Services.AddOptions<PaymentOptions>()
+    .BindConfiguration("Payments")
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 
-// builder.Services.AddScoped<EnrollmentWorker>();
+builder.Services.AddScoped<EnrollmentWorker>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
-// builder.Services.AddSingleton<IStudentService, StudentService>();
+builder.Services.AddSingleton<IStudentService, StudentService>();
 builder.Services.AddDbContext<TmsDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("TmsDatabase")));
 
@@ -39,17 +40,42 @@ builder.Services.AddControllers(options =>
 options.Filters.Add<AuditLogFilter>();
 });
 
+builder.Services.AddOpenApi("v1", options =>
+{
+options.ShouldInclude = description =>
+description.GroupName == "v1";
+});
+builder.Services.AddOpenApi("v2", options =>
+{
+options.ShouldInclude = description =>
+description.GroupName == "v2";
+});
+builder.Services.AddApiVersioning(options =>
+{
+options.DefaultApiVersion = new ApiVersion(1, 0);
+options.AssumeDefaultVersionWhenUnspecified = true;
+options.ReportApiVersions = true;
+options.ApiVersionReader = new UrlSegmentApiVersionReader();
+})
+.AddApiExplorer(options =>
+{
+options.GroupNameFormat = "'v'VVV";
+options.SubstituteApiVersionInUrl = true;
+});
+// update your scalar config
+
+
 
 
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 
-// app.MapGet("/api/enrollments/worker-smoke", (EnrollmentWorker worker) =>
-// {
-// worker.ProcessBatch();
-// return Results.Ok("processed");
-// });
+app.MapGet("/api/enrollments/worker-smoke", (EnrollmentWorker worker) =>
+{
+worker.ProcessBatch();
+return Results.Ok("processed");
+});
 
 if (!app.Environment.IsDevelopment())
 {
@@ -70,6 +96,18 @@ else
 {
     app.UseExceptionHandler(); 
 }
+
+app.MapScalarApiReference(options =>
+{
+options.WithTitle("TMS API Reference")
+.WithTheme(ScalarTheme.DeepSpace)
+.WithDefaultHttpClient(ScalarTarget.CSharp,
+ScalarClient.HttpClient);
+// Tell Scalar to pull both documents into its sidebar dropdown
+options
+.AddDocument("v1", "API Version 1.0")
+.AddDocument("v2", "API Version 2.0");
+});
 
 
 app.UseAuthorization();
@@ -115,12 +153,12 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// if (app.Environment.IsDevelopment())
-// {
-//     using var scope = app.Services.CreateScope();
-//     var context = scope.ServiceProvider.GetRequiredService<TmsDbContext>();
-//     await DataSeeder.SeedAsync(context);
-// }
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<TmsDbContext>();
+    await DataSeeder.SeedAsync(context);
+}
 
 
 app.Run();
