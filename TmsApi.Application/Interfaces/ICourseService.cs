@@ -1,6 +1,6 @@
 using TmsApi.Application.DTOs;
 
-namespace TmsApi.Infrastructure.Services;
+namespace TmsApi.Application.Interfaces;
 public interface ICourseService
 {
 Task<CourseResponseDto?> GetByIdAsync(int id, CancellationToken ct);

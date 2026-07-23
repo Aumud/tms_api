@@ -1,6 +1,7 @@
 //using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using TmsApi.Application.Interfaces;
 using TmsApi.Infrastructure.Persistence;
 using TmsApi.Infrastructure.Services;
 using TmsApi.Domain.Entities;
